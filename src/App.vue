@@ -22,7 +22,7 @@ export default {
     }
   },
   mounted () {
-      d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-01-2020.csv", d => {
+      d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgFQiqa_9ZCCs-jHbB98-9skKwHfKoEUv2jV4oJ6pHwMWSmFoFVpfolEdDQYhiZvsV0Y7u8jEE9Ue/pub?gid=0&single=true&output=csv", d => {
         this.csv = d
       })
   },
