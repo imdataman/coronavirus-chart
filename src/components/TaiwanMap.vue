@@ -101,7 +101,7 @@ export default {
             const coord = path.centroid(d)
             const nudge = radius(d.properties.CONFIRMED)
             coord[0] = coord[0] + nudge + 2
-            coord[1] = coord[1] + 5
+            coord[1] = coord[1] + 8
             return `translate(${coord})`
           })
           .text(d => {
@@ -120,7 +120,7 @@ export default {
 .taiwanLabel {
   text-anchor: start;
   fill-opacity: 0.8;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 @media (max-width: 400px) {
@@ -128,7 +128,7 @@ export default {
     padding: 0;
   }
   .taiwanLabel {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
 </style>

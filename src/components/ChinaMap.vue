@@ -45,7 +45,7 @@ export default {
           .attr('transform', d => {
             const nudge = radius(d.Confirmed)
             const coord = projection([+d.Longitude, +d.Latitude])
-            return d['ChineseNameProvince'] === '湖北' ? 'translate(' + (coord[0]) + ', ' + (coord[1] + 5) + ')' : 'translate(' + (coord[0] + nudge + 2) + ', ' + (coord[1] + 5) + ')'
+            return d['ChineseNameProvince'] === '湖北' ? 'translate(' + (coord[0]) + ', ' + (coord[1] + 5) + ')' : 'translate(' + (coord[0] + nudge + 2) + ', ' + (coord[1] + 8) + ')'
           })
           .text(d => d['ChineseNameProvince'])
         
@@ -123,7 +123,7 @@ export default {
 .ChinaLabel {
   text-anchor: start;
   fill-opacity: 0.8;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 @media (max-width: 400px) {
@@ -131,10 +131,10 @@ export default {
     padding: 0;
   }
   .CircleLegendText  {
-    font-size: 20px;
+    font-size: 24px;
   }
   .ChinaLabel {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
 </style>
