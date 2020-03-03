@@ -95,36 +95,38 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style>
-#china {
-  padding: 10%;
+#china { 
+  margin-top: 60px;
 }
 
 .mapLayer {
   fill: WhiteSmoke;
-  stroke: white;
+  stroke: Gainsboro;
+  stroke-width: 0.5px;
 }
 
 .CircleLayer {
-  fill: Chocolate;
-  fill-opacity: 0.5;
+  fill: FireBrick;
+  fill-opacity: 0;
   stroke-width: 1.5px;
-  stroke: Chocolate;
+  stroke: FireBrick;
 }
 
 .CircleLegend {
-  fill: Chocolate;
-  fill-opacity: 0.5;
+  fill: FireBrick;
+  fill-opacity: 0;
   stroke-width: 1.5px;
-  stroke: Chocolate;
+  stroke: FireBrick;
 }
 
 .CircleLegendText {
   text-anchor: middle;
+  fill-opacity: 0.8;
 }
 
 .ChinaLabel {
   text-anchor: start;
-  /* fill-opacity: 0.5; */
+  fill-opacity: 0.8;
   font-size: 16px;
 }
 

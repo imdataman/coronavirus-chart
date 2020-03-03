@@ -12,7 +12,7 @@ export default {
   watch: {
     csv: function () {
       d3.queue(2)
-        .defer(d3.json, './data/Age_County_Gender_19Cov.json')
+        .defer(d3.csv, 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgFQiqa_9ZCCs-jHbB98-9skKwHfKoEUv2jV4oJ6pHwMWSmFoFVpfolEdDQYhiZvsV0Y7u8jEE9Ue/pub?gid=1630951090&single=true&output=csv')
         .defer(d3.json, './data/taiwan.json')
         .awaitAll(ready)
       function ready(error, results) {
@@ -91,8 +91,6 @@ export default {
           })
           .text(d => d)
 
-        console.log(Infected)
-
         svg.append('g')
           .selectAll('text')
           .data(Infected)
@@ -119,13 +117,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-#taiwan {
-  padding: 10%;
+#taiwan { 
+  margin-top: 60px;
 }
 
 .taiwanLabel {
   text-anchor: start;
-  /* fill-opacity: 0.5; */
+  fill-opacity: 0.8;
   font-size: 16px;
 }
 
