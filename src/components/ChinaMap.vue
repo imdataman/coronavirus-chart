@@ -95,10 +95,6 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style>
-#china { 
-  margin-top: 60px;
-}
-
 .mapLayer {
   fill: WhiteSmoke;
   stroke: Gainsboro;

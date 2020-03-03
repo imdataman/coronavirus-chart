@@ -117,10 +117,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-#taiwan { 
-  margin-top: 60px;
-}
-
 .taiwanLabel {
   text-anchor: start;
   fill-opacity: 0.8;
