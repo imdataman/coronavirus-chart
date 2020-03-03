@@ -126,7 +126,7 @@ export default {
   font-size: 20px;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   #china {
     padding: 0;
   }

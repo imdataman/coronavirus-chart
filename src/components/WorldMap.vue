@@ -134,7 +134,7 @@ export default {
   font-weight: bold;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   #world {
     padding: 0;
   }

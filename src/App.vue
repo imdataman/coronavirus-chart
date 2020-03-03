@@ -60,7 +60,7 @@ export default {
   padding: 0 10%;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   #app {
     padding: 0;
   }
