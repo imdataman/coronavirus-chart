@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
     <ChinaMap :csv="csv"/>
     <WorldMap :csv="csv"/>
     <TaiwanMap :csv="csv"/>
