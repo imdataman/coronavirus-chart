@@ -12,13 +12,15 @@ export default {
   watch: {
     csv: function () {
       d3.queue(2)
-        .defer(d3.csv, 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgFQiqa_9ZCCs-jHbB98-9skKwHfKoEUv2jV4oJ6pHwMWSmFoFVpfolEdDQYhiZvsV0Y7u8jEE9Ue/pub?gid=1630951090&single=true&output=csv')
+        .defer(d3.json, 'https://script.google.com/macros/s/AKfycbwel-mQ7nHh6TG4Kvgw_d9l7YqxsaNEgT9qvBKyDRABgIVbICK1/exec')
         .defer(d3.json, './data/taiwan.json')
         .awaitAll(ready)
       function ready(error, results) {
         if (error) throw error
-        const TaiwanCases = results[0]
+        const TaiwanCases = results[0].user
         const TaiwanMap = results[1]
+
+        console.log(TaiwanCases)
 
         const CountyConfirmed = d3.nest()
           .key(d => d['縣市'])

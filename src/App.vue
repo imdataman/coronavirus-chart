@@ -38,8 +38,8 @@ export default {
     }
   },
   mounted () {
-      d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgFQiqa_9ZCCs-jHbB98-9skKwHfKoEUv2jV4oJ6pHwMWSmFoFVpfolEdDQYhiZvsV0Y7u8jEE9Ue/pub?gid=0&single=true&output=csv", d => {
-        this.csv = d
+      d3.json("https://script.google.com/macros/s/AKfycbzlwh5YaMCP6JQcCO_hzZKQSFTJQT65UvBp5AHDojAD-AjhSJ3D/exec", d => {
+        this.csv = d.user
       })
   },
   components: {

@@ -27,7 +27,7 @@ export default {
 
       const path = d3.geoPath().projection(projection)
 
-      const radius = d3.scaleSqrt([0, d3.max(ChinaData, d => d.Confirmed)], [0, 10])
+      const radius = d3.scaleSqrt([0, d3.max(ChinaData, d => d.Confirmed)], [0, 50])
       
       d3.json('./data/china.json', d => {
         svg.append('g')
@@ -42,6 +42,7 @@ export default {
           .enter()
           .append('text')
           .classed('ChinaLabel', true)
+          .classed('HubeiLabel', d => d['ChineseNameProvince'] === '湖北')
           .attr('transform', d => {
             const nudge = radius(d.Confirmed)
             const coord = projection([+d.Longitude, +d.Latitude])
@@ -124,6 +125,10 @@ export default {
   text-anchor: start;
   fill-opacity: 0.8;
   font-size: 20px;
+}
+
+.HubeiLabel {
+  text-anchor: middle;
 }
 
 @media (max-width: 480px) {
