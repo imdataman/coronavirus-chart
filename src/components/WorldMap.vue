@@ -135,9 +135,6 @@ export default {
 }
 
 @media (max-width: 480px) {
-  #world {
-    padding: 0;
-  }
   .tableText {
     font-size: 12px;
   }

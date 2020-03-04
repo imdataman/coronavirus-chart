@@ -20,8 +20,6 @@ export default {
         const TaiwanCases = results[0].user
         const TaiwanMap = results[1]
 
-        console.log(TaiwanCases)
-
         const CountyConfirmed = d3.nest()
           .key(d => d['縣市'])
           .rollup(v => d3.sum(v, d => d['確定病例數']))
@@ -146,9 +144,6 @@ export default {
 }
 
 @media (max-width: 480px) {
-  #taiwan {
-    padding: 0;
-  }
   .taiwanLabel {
     font-size: 24px;
   }

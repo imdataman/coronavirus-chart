@@ -130,16 +130,4 @@ export default {
 .HubeiLabel {
   text-anchor: middle;
 }
-
-@media (max-width: 480px) {
-  #china {
-    padding: 0;
-  }
-  .CircleLegendText  {
-    font-size: 24px;
-  }
-  .ChinaLabel {
-    font-size: 24px;
-  }
-}
 </style>
