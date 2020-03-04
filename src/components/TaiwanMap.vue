@@ -47,9 +47,11 @@ export default {
         const radius = d3.scaleSqrt([0, d3.max(CountyConfirmed, d => d.value)], [0, 20])
 
         svg.append('g')
+          .selectAll('path')
+          .data(TaiwanMap.features)
+          .enter()
           .append('path')
           .classed('mapLayer', true)
-          .datum(TaiwanMap)
           .attr('d', path)
         
         svg.append('g')
@@ -109,6 +111,19 @@ export default {
             const label = d.properties.COUNTYNAME.replace(re, "")
             return label
           })
+
+        svg.append('g')
+          .selectAll('text')
+          .data(Infected)
+          .enter()
+          .append('text')
+          .classed('taiwanLabelNumbers', true)
+          .attr('transform', d => {
+            const coord = path.centroid(d)
+            coord[1] = coord[1] + 1
+            return `translate(${coord})`
+          })
+          .text(d => d.properties.CONFIRMED)
       }
     }
   }
@@ -121,6 +136,11 @@ export default {
   text-anchor: start;
   fill-opacity: 0.8;
   font-size: 20px;
+}
+
+.taiwanLabelNumbers {
+  text-anchor: middle;
+  dominant-baseline: middle;
 }
 
 @media (max-width: 480px) {
