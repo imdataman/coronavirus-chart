@@ -111,9 +111,8 @@ export default {
           .call(d3.axisLeft(y))
           .call(g => g.select(".domain").remove())
           .call(g => g.selectAll("line").remove())
+          .classed("tableText", true)
           .attr("transform", "translate(0 , -" + (barHeight / 2 - 7) + ")");
-
-        d3.selectAll(".tick text").attr("class", "tableText");
       }
 
       const AreaCases = d3

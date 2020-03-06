@@ -12,7 +12,8 @@ const d3 = Object.assign(
   require("d3-collection"),
   require("d3-axis"),
   require("d3-time-format"),
-  require("d3-shape")
+  require("d3-shape"),
+  require("d3-time")
 );
 
 export default {
@@ -104,6 +105,8 @@ export default {
       const unitLength = lineHeight * 0.9;
       const chartHeight = SelectedCountries.length * lineHeight;
 
+      const ProximityParameter = 0.4
+
       const y = d3
         .scaleBand()
         .range([0, chartHeight])
@@ -119,13 +122,15 @@ export default {
         .range([unitLength, 0])
         .domain([0, 1]);
 
+    const SVGHeight =y(SelectedCountries[CountryList.length - 1]["Country/Region"]) * ProximityParameter +
+            y.bandwidth()
+
       d3.select("#joy")
         .append("svg")
         .attr("id", "joyplot")
         .attr(
           "height",
-          y(SelectedCountries[CountryList.length - 1]["Country/Region"]) * 0.3 +
-            y.bandwidth()
+          SVGHeight + margin.bottom
         )
         .attr("width", "100%");
 
@@ -144,7 +149,7 @@ export default {
             "translate(" +
             margin.left +
             "," +
-            y(d["Country/Region"]) * 0.3 +
+            y(d["Country/Region"]) * ProximityParameter +
             ")"
           );
         })
@@ -169,15 +174,18 @@ export default {
       lines
         .append("text")
         .attr("class", "lineLabel")
-        .attr("y", d => y(d["Country/Region"]) * 0.3 + y.bandwidth() - 12)
+        .attr("y", d => y(d["Country/Region"]) * ProximityParameter + y.bandwidth() - 12)
         .attr("x", margin.left - 10)
         .text(d => d["Country/Region"]);
 
-      d3.selectAll(".lineText")
-        .filter(function() {
-          return d3.select(this).text() === "台灣";
-        })
-        .attr("id", "TaiwanBar");
+      joyplot.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + margin.left + "," + SVGHeight + ")")
+      .call(d3.axisBottom(x)
+      .ticks(d3.timeMonth)
+              .tickFormat(d3.timeFormat("%-m")))
+      .selectAll("text")	
+        .style("text-anchor", "middle")
     }
   }
 };
@@ -192,8 +200,12 @@ export default {
 
 .joys {
     fill-opacity: 0.7;
-    stroke: FireBrick;
+    stroke: black;
     stroke-width: 2;
     fill: FireBrick;
+}
+
+.axis {
+    font-size: 16px;
 }
 </style>
