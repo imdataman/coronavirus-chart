@@ -14,6 +14,7 @@
     <p>
       中國境外第一起確診案例發生在泰國，接著香港、日本、台灣等地陸續出現確診個案，疫情於1月31日開始爆發，新加坡於2月初首傳人傳人案例，接著停靠日本橫濱的鑽石公主號傳出一天新增41個病例，成為僅次中國的感染區，公主號內部感染者已超過700例，船隻停靠的日本國內確診案例也急劇上升。2月中南韓因大邱教會感染事件，已超越公主號成為第二大感染國，疫情持續升溫中。
     </p>
+    <Joyplot />
     <h3>武漢封鎖已超過一個月，中國境內疫情以湖北、廣東、浙江較為嚴重</h3>
     <p>
       新冠肺炎源頭武漢市自1月23日封城以來已超過一個月，世界衛生組織（WHO）於日前記者會表示，中國的疫情已達高峰，本月將逐漸趨緩，但中國確診人數仍每日增加，以湖北、廣東、浙江地區人數最多。
@@ -41,6 +42,7 @@
 import ChinaMap from "./components/ChinaMap.vue";
 import WorldMap from "./components/WorldMap.vue";
 import TaiwanMap from "./components/TaiwanMap.vue";
+import Joyplot from "./components/Joyplot.vue";
 
 const d3 = Object.assign({}, require("d3-request"));
 
@@ -62,7 +64,8 @@ export default {
   components: {
     ChinaMap,
     WorldMap,
-    TaiwanMap
+    TaiwanMap,
+    Joyplot
   }
 };
 </script>
