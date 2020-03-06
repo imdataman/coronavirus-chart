@@ -27,24 +27,35 @@ export default {
     function ready(error, result) {
       if (error) throw error;
 
-        const CountryDictionary = [
-          { en: "Iran", zh: "伊朗" },
-          { en: "South Korea", zh: "南韓" },
-          { en: "Taiwan", zh: "台灣" },
-          { en: "Italy", zh: "義大利" },
-          { en: "US", zh: "美國" },
-          { en: "Mainland China", zh: "中國大陸" },
-          { en: "France", zh: "法國" },
-          { en: "Germany", zh: "德國" },
-          { en: "Japan", zh: "日本" },
-          { en: "Spain", zh: "西班牙" }
-        ];
+      const CountryDictionary = [
+        { en: "Iran", zh: "伊朗" },
+        { en: "South Korea", zh: "南韓" },
+        { en: "Taiwan", zh: "台灣" },
+        { en: "Italy", zh: "義大利" },
+        { en: "US", zh: "美國" },
+        { en: "Mainland China", zh: "中國大陸" },
+        { en: "France", zh: "法國" },
+        { en: "Germany", zh: "德國" },
+        { en: "Japan", zh: "日本" },
+        { en: "Spain", zh: "西班牙" }
+      ];
 
       function addvector(a, b) {
         return a.map((e, i) => e + b[i]);
       }
 
-      const CountryList = ["Mainland China", "South Korea", "Italy", "Iran", "Germany", "France", "Japan", "Spain", "US", "Taiwan"];
+      const CountryList = [
+        "Mainland China",
+        "South Korea",
+        "Italy",
+        "Iran",
+        "Germany",
+        "France",
+        "Japan",
+        "Spain",
+        "US",
+        "Taiwan"
+      ];
 
       let SelectedCountries = result.filter(d =>
         CountryList.includes(d["Country/Region"])
@@ -54,7 +65,9 @@ export default {
         d.Confirmed = Object.entries(d)
           .map(j => +j[1])
           .slice(4)
-          .map((d, i, arr) => i > 0 ? arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0 : d);
+          .map((d, i, arr) =>
+            i > 0 ? (arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0) : d
+          );
       });
 
       const ProblematicCountries = d3
@@ -110,7 +123,7 @@ export default {
       const unitLength = lineHeight * 0.9;
       const chartHeight = SelectedCountries.length * lineHeight;
 
-      const ProximityParameter = 0.4
+      const ProximityParameter = 0.4;
 
       const y = d3
         .scaleBand()
@@ -127,16 +140,15 @@ export default {
         .range([unitLength, 0])
         .domain([0, 1]);
 
-    const SVGHeight =y(SelectedCountries[CountryList.length - 1]["Country/Region"]) * ProximityParameter +
-            y.bandwidth()
+      const SVGHeight =
+        y(SelectedCountries[CountryList.length - 1]["Country/Region"]) *
+          ProximityParameter +
+        y.bandwidth();
 
       d3.select("#joy")
         .append("svg")
         .attr("id", "joyplot")
-        .attr(
-          "height",
-          SVGHeight + margin.bottom
-        )
+        .attr("height", SVGHeight + margin.bottom)
         .attr("width", "100%");
 
       const joyplot = d3.select("#joyplot").append("g");
@@ -179,18 +191,28 @@ export default {
       lines
         .append("text")
         .attr("class", "lineLabel")
-        .attr("y", d => y(d["Country/Region"]) * ProximityParameter + y.bandwidth() - 12)
+        .attr(
+          "y",
+          d => y(d["Country/Region"]) * ProximityParameter + y.bandwidth() - 12
+        )
         .attr("x", margin.left - 10)
-        .text(d => CountryDictionary.filter(j => j.en === d["Country/Region"])[0].zh);
+        .text(
+          d => CountryDictionary.filter(j => j.en === d["Country/Region"])[0].zh
+        );
 
-      joyplot.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(" + margin.left + "," + SVGHeight + ")")
-      .call(d3.axisBottom(x)
-      .ticks(d3.timeMonth)
-              .tickFormat(d3.timeFormat("%-m")))
-      .selectAll("text")	
-        .style("text-anchor", "middle")
+      joyplot
+        .append("g")
+        .attr("class", "lineAxis")
+        .attr("transform", "translate(" + margin.left + "," + SVGHeight + ")")
+        .call(
+          d3
+            .axisBottom(x)
+            .ticks(d3.timeMonth)
+            .tickFormat(d3.timeFormat("%-m"))
+        )
+        .call(g => g.select(".domain").remove())
+        .selectAll("text")
+        .style("text-anchor", "middle");
     }
   }
 };
@@ -204,13 +226,17 @@ export default {
 }
 
 .joys {
-    fill-opacity: 0.7;
-    stroke: black;
-    stroke-width: 2;
-    fill: FireBrick;
+  fill-opacity: 0.7;
+  stroke: black;
+  stroke-width: 1;
+  fill: FireBrick;
 }
 
-.axis {
-    font-size: 16px;
+.lineAxis {
+  font-size: 16px;
+}
+
+.lineAxis line {
+    stroke: none;
 }
 </style>
