@@ -27,13 +27,18 @@ export default {
     function ready(error, result) {
       if (error) throw error;
 
-      //   const CountryList = [
-      //     { en: "Iran", zh: "伊朗" },
-      //     { en: "South Korea", zh: "南韓" },
-      //     { en: "Taiwan", zh: "台灣" },
-      //     { en: "Italy", zh: "義大利" },
-      //     { en: "US", zh: "美國" }
-      //   ];
+        const CountryDictionary = [
+          { en: "Iran", zh: "伊朗" },
+          { en: "South Korea", zh: "南韓" },
+          { en: "Taiwan", zh: "台灣" },
+          { en: "Italy", zh: "義大利" },
+          { en: "US", zh: "美國" },
+          { en: "Mainland China", zh: "中國大陸" },
+          { en: "France", zh: "法國" },
+          { en: "Germany", zh: "德國" },
+          { en: "Japan", zh: "日本" },
+          { en: "Spain", zh: "西班牙" }
+        ];
 
       function addvector(a, b) {
         return a.map((e, i) => e + b[i]);
@@ -98,7 +103,7 @@ export default {
         null
       );
       const width = +style.getPropertyValue("width").match(/[\d]+/)[0];
-      const margin = { top: 0, right: 0, bottom: 30, left: 110 };
+      const margin = { top: 0, right: 0, bottom: 30, left: 80 };
       const chartWidth = width - margin.left - margin.right;
 
       const lineHeight = 100;
@@ -176,7 +181,7 @@ export default {
         .attr("class", "lineLabel")
         .attr("y", d => y(d["Country/Region"]) * ProximityParameter + y.bandwidth() - 12)
         .attr("x", margin.left - 10)
-        .text(d => d["Country/Region"]);
+        .text(d => CountryDictionary.filter(j => j.en === d["Country/Region"])[0].zh);
 
       joyplot.append("g")
       .attr("class", "axis")
