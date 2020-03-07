@@ -14,7 +14,14 @@ const d3 = Object.assign(
 
 export default {
   name: "ChinaMap",
-  props: ["csv"],
+  props: {
+    csv: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   watch: {
     csv: function() {
       const ChinaData = this.csv

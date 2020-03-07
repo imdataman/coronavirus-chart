@@ -16,7 +16,14 @@ const d3 = Object.assign(
 
 export default {
   name: "WorldMap",
-  props: ["csv"],
+  props: {
+    csv: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   watch: {
     csv: function() {
       const WorldData = this.csv.filter(
@@ -135,6 +142,10 @@ export default {
           return d3.select(this).text() === "台灣";
         })
         .attr("id", "TaiwanBar");
+
+      this.$nextTick(function() {
+        this.$emit("ready");
+      });
     }
   }
 };

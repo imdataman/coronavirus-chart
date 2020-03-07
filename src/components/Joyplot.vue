@@ -237,6 +237,6 @@ export default {
 }
 
 .lineAxis line {
-    stroke: none;
+  stroke: none;
 }
 </style>
