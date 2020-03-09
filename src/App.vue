@@ -84,10 +84,6 @@ export default {
 </script>
 
 <style>
-#app {
-  overflow: auto;
-}
-
 #content {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

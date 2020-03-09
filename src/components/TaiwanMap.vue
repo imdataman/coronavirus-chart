@@ -152,6 +152,31 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+.mapLayer {
+  fill: WhiteSmoke;
+  stroke: Gainsboro;
+  stroke-width: 0.5px;
+}
+
+.CircleLayer {
+  fill: FireBrick;
+  fill-opacity: 0;
+  stroke-width: 1.5px;
+  stroke: FireBrick;
+}
+
+.CircleLegend {
+  fill: FireBrick;
+  fill-opacity: 0;
+  stroke-width: 1.5px;
+  stroke: FireBrick;
+}
+
+.CircleLegendText {
+  text-anchor: middle;
+  fill-opacity: 0.8;
+}
+
 .taiwanLabel {
   text-anchor: start;
   fill-opacity: 0.8;

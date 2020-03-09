@@ -111,12 +111,8 @@ export default {
         .slice(4)
         .map(j => parseTime(j));
 
-      const style = window.getComputedStyle(
-        document.getElementById("joy"),
-        null
-      );
-      const width = +style.getPropertyValue("width").match(/[\d]+/)[0];
-      const margin = { top: 0, right: 0, bottom: 30, left: 80 };
+      const width = document.getElementById("joy").offsetWidth;
+      const margin = { top: 0, right: 10, bottom: 30, left: 80 };
       const chartWidth = width - margin.left - margin.right;
 
       const lineHeight = 100;

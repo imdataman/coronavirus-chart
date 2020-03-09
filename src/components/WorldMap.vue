@@ -36,7 +36,8 @@ export default {
         .key(d => d["ChineseNameCountry"])
         .rollup(v => d3.sum(v, d => d["Confirmed"]))
         .entries(WorldData)
-        .sort((a, b) => b.value - a.value);
+        .sort((a, b) => b.value - a.value)
+        .filter(d => d.value >= 10);
 
       CountryCases.forEach(
         d =>
@@ -45,11 +46,7 @@ export default {
           )[0].area)
       );
 
-      const style = window.getComputedStyle(
-        document.getElementById("world"),
-        null
-      );
-      const width = +style.getPropertyValue("width").match(/[\d]+/)[0];
+      const width = document.getElementById("world").offsetWidth;
       const margin = { top: 60, right: 50, bottom: 30, left: 110 };
       const tableWidth = width - margin.left - margin.right;
       const maxX = CountryCases[0].value;
