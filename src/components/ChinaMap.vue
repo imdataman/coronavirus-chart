@@ -42,10 +42,7 @@ export default {
 
       const path = d3.geoPath().projection(projection);
 
-      const radius = d3.scaleSqrt(
-        [0, d3.max(ChinaData, d => d.Confirmed)],
-        [0, 50]
-      );
+      const radius = d3.scaleSqrt([0, 50000], [0, 50]);
 
       d3.json("./data/china.json", d => {
         svg
@@ -71,7 +68,7 @@ export default {
               : "translate(" +
                   (coord[0] + nudge + 2) +
                   ", " +
-                  (coord[1] + 8) +
+                  (coord[1] + 7) +
                   ")";
           })
           .text(d => d["ChineseNameProvince"]);
