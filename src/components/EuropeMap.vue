@@ -1,0 +1,185 @@
+<template>
+  <div id="europe"></div>
+</template>
+
+<script>
+const d3 = Object.assign(
+  {},
+  require("d3-request"),
+  require("d3-selection"),
+  require("d3-geo"),
+  require("d3-scale"),
+  require("d3-array")
+);
+
+export default {
+  name: "EuropeMap",
+  props: {
+    csv: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
+  watch: {
+    csv: function() {
+      const FixLocation = [
+        {
+          name: "Finland",
+          Latitude: 61.734776,
+          Longitude: 24.344157
+        },
+        {
+          name: "Sweden",
+          Latitude: 58.012265,
+          Longitude: 14.359394
+        },
+        {
+          name: "Russia",
+          Latitude: 55.684627,
+          Longitude: 37.605155
+        }
+      ];
+
+      const FixLocationList = FixLocation.map(j => j.name);
+
+      const EuropeData = this.csv
+        .filter(d => d["area"] === "歐洲" && d["Country/Region"] !== "Ireland")
+        .sort((a, b) => b.Confirmed - a.Confirmed);
+
+      EuropeData.forEach(d => {
+        d.Latitude = FixLocationList.includes(d["Country/Region"])
+          ? FixLocation.filter(k => k.name === d["Country/Region"])[0].Latitude
+          : d.Latitude;
+        d.Longitude = FixLocationList.includes(d["Country/Region"])
+          ? FixLocation.filter(k => k.name === d["Country/Region"])[0].Longitude
+          : d.Longitude;
+      });
+
+      const TopTen = EuropeData.slice(0, 10);
+
+      const svg = d3
+        .select("#europe")
+        .append("svg")
+        .attr("viewBox", [0, 0, 950, 650]);
+
+      const projection = d3
+        .geoConicEquidistant()
+        .rotate([-25.0, 0.0])
+        .center([-10.0, 53])
+        .parallels([-0.0, 55.0])
+        .scale(1500)
+        .precision(0.1);
+
+      const path = d3.geoPath().projection(projection);
+
+      const radius = d3.scaleSqrt(
+        [0, d3.max(EuropeData, d => d.Confirmed)],
+        [0, 50]
+      );
+
+      d3.json("./data/europe.json", d => {
+        svg
+          .append("g")
+          .append("path")
+          .classed("mapLayer", true)
+          .datum(d)
+          .attr("d", path);
+
+        svg
+          .append("g")
+          .selectAll("text")
+          .data(TopTen)
+          .enter()
+          .append("text")
+          .classed("EuropeLabel", true)
+          .attr("transform", d => {
+            const nudge = radius(d.Confirmed);
+            const coord = projection([+d.Longitude, +d.Latitude]);
+            return (
+              "translate(" +
+              (coord[0] + nudge + 2) +
+              ", " +
+              (coord[1] + 8) +
+              ")"
+            );
+          })
+          .text(d => d["ChineseNameCountry"]);
+
+        svg
+          .append("g")
+          .selectAll("circle")
+          .data(EuropeData)
+          .enter()
+          .append("circle")
+          .classed("CircleLayer", true)
+          .attr("r", d => radius(d.Confirmed))
+          .attr("transform", d => {
+            const coord = projection([+d.Longitude, +d.Latitude]);
+            return "translate(" + coord[0] + ", " + coord[1] + ")";
+          });
+
+        svg
+          .append("g")
+          .selectAll("circle")
+          .data([100, 1000, 10000])
+          .enter()
+          .append("circle")
+          .classed("CircleLegend", true)
+          .attr("r", d => radius(d))
+          .attr("transform", d => {
+            return "translate(" + 850 + ", " + (620 - radius(d)) + ")";
+          });
+
+        svg
+          .append("g")
+          .selectAll("text")
+          .data([100, 1000, 10000])
+          .enter()
+          .append("text")
+          .classed("CircleLegendText", true)
+          .attr("transform", d => {
+            const nudge = d === 100 ? -(radius(d) * 2 + 12) : radius(d) * 2 + 5;
+            return "translate(" + 850 + ", " + (620 - nudge) + ")";
+          })
+          .text(d => d);
+      });
+    }
+  }
+};
+</script>
+
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style>
+.mapLayer {
+  fill: WhiteSmoke;
+  stroke: Gainsboro;
+  stroke-width: 0.5px;
+}
+
+.CircleLayer {
+  fill: FireBrick;
+  fill-opacity: 0;
+  stroke-width: 1.5px;
+  stroke: FireBrick;
+}
+
+.CircleLegend {
+  fill: FireBrick;
+  fill-opacity: 0;
+  stroke-width: 1.5px;
+  stroke: FireBrick;
+}
+
+.CircleLegendText {
+  text-anchor: middle;
+  fill-opacity: 0.8;
+}
+
+.EuropeLabel {
+  text-anchor: start;
+  fill-opacity: 0.8;
+  font-size: 20px;
+}
+</style>

@@ -25,8 +25,10 @@
       <p>
         新冠肺炎源頭武漢市自1月23日封城以來已超過一個月，世界衛生組織（WHO）於日前記者會表示，中國的疫情已達高峰，本月將逐漸趨緩，但中國確診人數仍每日增加，以湖北、廣東、浙江地區人數最多。
       </p>
-      <b>中國各省份確診中國各省份確診病例數</b>
+      <b>中國各省份確診病例數</b>
       <ChinaMap :csv="csv" />
+      <b>歐洲各國確診病例數</b>
+      <EuropeMap :csv="csv" />
       <h3>台灣境內確診個案已超過30例</h3>
       <p>
         中央流行疫情指揮中心應變官莊人祥表示，因為初期確診新冠肺炎的個案人數較少，如果公布所在地有被指認的風險，但隨確診數目增加，較不會有疑慮。
@@ -47,6 +49,7 @@
 
 <script>
 import ChinaMap from "./components/ChinaMap.vue";
+import EuropeMap from "./components/EuropeMap.vue";
 import WorldMap from "./components/WorldMap.vue";
 import TaiwanMap from "./components/TaiwanMap.vue";
 import Joyplot from "./components/Joyplot.vue";
@@ -57,6 +60,7 @@ export default {
   name: "App",
   components: {
     ChinaMap,
+    EuropeMap,
     WorldMap,
     TaiwanMap,
     Joyplot
