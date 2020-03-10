@@ -37,7 +37,8 @@ export default {
         { en: "France", zh: "法國" },
         { en: "Germany", zh: "德國" },
         { en: "Japan", zh: "日本" },
-        { en: "Spain", zh: "西班牙" }
+        { en: "Spain", zh: "西班牙" },
+        { en: "UK", zh: "英國" }
       ];
 
       function addvector(a, b) {
@@ -51,6 +52,7 @@ export default {
         "Iran",
         "Germany",
         "France",
+        "UK",
         "Japan",
         "Spain",
         "US",
@@ -100,9 +102,12 @@ export default {
       ProblematicCountries.forEach(AggregateCountry);
 
       SelectedCountries.forEach(d => {
-        const MaxX = d3.max(d.Confirmed);
+        const MaxX = 15000;
         d.Confirmed = d.Confirmed.map(d => d / MaxX);
+        d.order = CountryList.findIndex(j => j === d["Country/Region"]);
       });
+
+      SelectedCountries = SelectedCountries.sort((a, b) => b.order - a.order);
 
       const parseTime = d3.timeParse("%m/%d/%y");
 
@@ -116,7 +121,7 @@ export default {
       const chartWidth = width - margin.left - margin.right;
 
       const lineHeight = 100;
-      const unitLength = lineHeight * 0.9;
+      const unitLength = lineHeight * 6;
       const chartHeight = SelectedCountries.length * lineHeight;
 
       const ProximityParameter = 0.4;
@@ -162,7 +167,9 @@ export default {
             "translate(" +
             margin.left +
             "," +
-            y(d["Country/Region"]) * ProximityParameter +
+            (y(d["Country/Region"]) * ProximityParameter -
+              unitLength +
+              lineHeight) +
             ")"
           );
         })
