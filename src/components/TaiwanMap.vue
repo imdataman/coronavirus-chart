@@ -18,15 +18,12 @@ export default {
   name: "TaiwanMap",
   mounted() {
     d3.queue(2)
-      .defer(
-        d3.json,
-        "https://script.google.com/macros/s/AKfycbwel-mQ7nHh6TG4Kvgw_d9l7YqxsaNEgT9qvBKyDRABgIVbICK1/exec"
-      )
+      .defer(d3.json, "./data/taiwan-cases.json")
       .defer(d3.json, "./data/taiwan.json")
       .awaitAll(ready);
     function ready(error, results) {
       if (error) throw error;
-      const TaiwanCases = results[0].user;
+      const TaiwanCases = results[0];
       const TaiwanMap = results[1];
 
       const CountyConfirmed = d3

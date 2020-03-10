@@ -19,10 +19,7 @@ const d3 = Object.assign(
 export default {
   name: "Joyplot",
   mounted() {
-    d3.csv(
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
-      ready
-    );
+    d3.json("./data/JHU-series.json", ready);
 
     function ready(error, result) {
       if (error) throw error;

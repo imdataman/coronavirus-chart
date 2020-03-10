@@ -75,12 +75,9 @@ export default {
     };
   },
   mounted() {
-    d3.json(
-      "https://script.google.com/macros/s/AKfycbzlwh5YaMCP6JQcCO_hzZKQSFTJQT65UvBp5AHDojAD-AjhSJ3D/exec",
-      d => {
-        this.csv = d.user;
-      }
-    );
+    d3.json("./data/JHU-latest.json", d => {
+      this.csv = d;
+    });
   },
   methods: {
     toggle: function() {
