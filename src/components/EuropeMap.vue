@@ -74,7 +74,7 @@ export default {
 
       const path = d3.geoPath().projection(projection);
 
-      const radius = d3.scaleSqrt([0, 10000], [0, 50]);
+      const radius = d3.scaleSqrt([0, 10000], [0, 40]);
 
       d3.json("./data/europe.json", d => {
         svg

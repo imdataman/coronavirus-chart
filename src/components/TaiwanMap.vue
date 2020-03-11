@@ -26,6 +26,11 @@ export default {
       const TaiwanCases = results[0];
       const TaiwanMap = results[1];
 
+      const ModifyPosition = [
+        { name: "台北市", position: "top" },
+        { name: "桃園市", position: "top" }
+      ];
+
       const CountyConfirmed = d3
         .nest()
         .key(d => d["縣市"])
@@ -119,8 +124,15 @@ export default {
         .attr("transform", d => {
           const coord = path.centroid(d);
           const nudge = radius(d.properties.CONFIRMED);
-          coord[0] = coord[0] + nudge + 2;
-          coord[1] = coord[1] + 8;
+          if (
+            ModifyPosition.map(j => j.name).includes(d.properties.COUNTYNAME)
+          ) {
+            coord[0] = coord[0] - 20;
+            coord[1] = coord[1] - nudge - 5;
+          } else {
+            coord[0] = coord[0] + nudge + 2;
+            coord[1] = coord[1] + 7;
+          }
           return `translate(${coord})`;
         })
         .text(d => {
@@ -183,11 +195,5 @@ export default {
 .taiwanLabelNumbers {
   text-anchor: middle;
   dominant-baseline: middle;
-}
-
-@media (max-width: 480px) {
-  .taiwanLabel {
-    font-size: 24px;
-  }
 }
 </style>
