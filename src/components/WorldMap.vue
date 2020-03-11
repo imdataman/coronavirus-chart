@@ -91,10 +91,9 @@ export default {
         y.domain(tableData.map(d => d.key));
 
         const bars = svg2
-          .selectAll(".bar")
+          .selectAll("g")
           .data(tableData)
-          .enter()
-          .append("g");
+          .join("g");
 
         bars
           .append("rect")

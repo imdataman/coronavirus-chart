@@ -152,10 +152,9 @@ export default {
       const joyplot = d3.select("#joyplot").append("g");
 
       const lines = joyplot
-        .selectAll("path")
+        .selectAll("g")
         .data(SelectedCountries)
-        .enter()
-        .append("g");
+        .join("g");
 
       lines
         .append("path")

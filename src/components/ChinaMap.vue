@@ -56,8 +56,7 @@ export default {
           .append("g")
           .selectAll("text")
           .data(TopTen)
-          .enter()
-          .append("text")
+          .join("text")
           .classed("ChinaLabel", true)
           .classed("HubeiLabel", d => d["ChineseNameProvince"] === "湖北")
           .attr("transform", d => {
@@ -77,8 +76,7 @@ export default {
           .append("g")
           .selectAll("circle")
           .data(ChinaData)
-          .enter()
-          .append("circle")
+          .join("circle")
           .classed("CircleLayer", true)
           .attr("r", d => radius(d.Confirmed))
           .attr("transform", d => {
@@ -90,8 +88,7 @@ export default {
           .append("g")
           .selectAll("circle")
           .data([100, 1000, 10000, 50000])
-          .enter()
-          .append("circle")
+          .join("circle")
           .classed("CircleLegend", true)
           .attr("r", d => radius(d))
           .attr("transform", d => {
@@ -102,8 +99,7 @@ export default {
           .append("g")
           .selectAll("text")
           .data([100, 1000, 10000, 50000])
-          .enter()
-          .append("text")
+          .join("text")
           .classed("CircleLegendText", true)
           .attr("transform", d => {
             const nudge = d === 100 ? -(radius(d) * 2 + 12) : radius(d) * 2 + 5;

@@ -71,8 +71,7 @@ export default {
         .append("g")
         .selectAll("path")
         .data(TaiwanMap.features)
-        .enter()
-        .append("path")
+        .join("path")
         .classed("mapLayer", true)
         .attr("d", path);
 
@@ -80,8 +79,7 @@ export default {
         .append("g")
         .selectAll("circle")
         .data(TaiwanMap.features)
-        .enter()
-        .append("circle")
+        .join("circle")
         .classed("CircleLayer", true)
         .attr("r", d => radius(d.properties.CONFIRMED))
         .attr("transform", d => {
@@ -93,8 +91,7 @@ export default {
         .append("g")
         .selectAll("circle")
         .data([1, 5, 20])
-        .enter()
-        .append("circle")
+        .join("circle")
         .classed("CircleLegend", true)
         .attr("r", d => radius(d))
         .attr("transform", d => {
@@ -105,8 +102,7 @@ export default {
         .append("g")
         .selectAll("text")
         .data([1, 5, 20])
-        .enter()
-        .append("text")
+        .join("text")
         .classed("CircleLegendText", true)
         .attr("transform", d => {
           const nudge = d === 1 ? -(radius(d) * 2 + 10) : radius(d) * 2 + 5;
@@ -118,8 +114,7 @@ export default {
         .append("g")
         .selectAll("text")
         .data(Infected)
-        .enter()
-        .append("text")
+        .join("text")
         .classed("taiwanLabel", true)
         .attr("transform", d => {
           const coord = path.centroid(d);
@@ -145,8 +140,7 @@ export default {
         .append("g")
         .selectAll("text")
         .data(Infected)
-        .enter()
-        .append("text")
+        .join("text")
         .classed("taiwanLabelNumbers", true)
         .attr("transform", d => {
           const coord = path.centroid(d);
