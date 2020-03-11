@@ -46,6 +46,21 @@
       <p>
         鄰近台灣的亞洲國家目前以中國、南韓、日本為疫情較嚴重的地區，中國地區與南韓為第三級旅遊警戒地區，中國地區與自2月27日後自南韓回國的國人需要居家檢疫14天。
       </p>
+      <div
+        ref="flourishTable"
+        class="flourish-embed flourish-table"
+        data-src="visualisation/1497079"
+      ></div>
+      <iframe
+        id="datawrapper-chart-SxQG7"
+        title="採購經理人指數變化"
+        aria-label="Arrow Plot"
+        src="//datawrapper.dwcdn.net/SxQG7/5/"
+        scrolling="no"
+        frameborder="0"
+        style="width: 0; min-width: 100% !important; border: none;"
+        height="414"
+      ></iframe>
     </div>
   </div>
 </template>
@@ -77,6 +92,23 @@ export default {
   mounted() {
     d3.json("./data/JHU-latest.json", d => {
       this.csv = d;
+    });
+
+    let foo = document.createElement("script");
+    foo.setAttribute(
+      "src",
+      "https://public.flourish.studio/resources/embed.js"
+    );
+    this.$refs.flourishTable.appendChild(foo);
+
+    window.addEventListener("message", function(a) {
+      if (void 0 !== a.data["datawrapper-height"])
+        for (var e in a.data["datawrapper-height"]) {
+          var t =
+            document.getElementById("datawrapper-chart-" + e) ||
+            document.querySelector("iframe[src*='" + e + "']");
+          t && (t.style.height = a.data["datawrapper-height"][e] + "px");
+        }
     });
   },
   methods: {
