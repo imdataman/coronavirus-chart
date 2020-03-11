@@ -36,7 +36,7 @@ export default {
           Longitude: 14.359394
         },
         {
-          name: "Russia",
+          name: "Russian Federation",
           Latitude: 55.684627,
           Longitude: 37.605155
         }
@@ -45,7 +45,7 @@ export default {
       const FixLocationList = FixLocation.map(j => j.name);
 
       const EuropeData = this.csv
-        .filter(d => d["area"] === "歐洲" && d["Country/Region"] !== "Ireland")
+        .filter(d => d["area"] === "歐洲")
         .sort((a, b) => b.Confirmed - a.Confirmed);
 
       EuropeData.forEach(d => {

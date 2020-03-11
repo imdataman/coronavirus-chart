@@ -25,9 +25,9 @@ export default {
       if (error) throw error;
 
       const CountryDictionary = [
-        { en: "Iran", zh: "伊朗" },
-        { en: "South Korea", zh: "南韓" },
-        { en: "Taiwan", zh: "台灣" },
+        { en: "Iran (Islamic Republic of)", zh: "伊朗" },
+        { en: "Republic of Korea", zh: "南韓" },
+        { en: "Taipei and environs", zh: "台灣" },
         { en: "Italy", zh: "義大利" },
         { en: "US", zh: "美國" },
         { en: "Mainland China", zh: "中國大陸" },
@@ -44,16 +44,16 @@ export default {
 
       const CountryList = [
         "Mainland China",
-        "South Korea",
+        "Republic of Korea",
         "Italy",
-        "Iran",
+        "Iran (Islamic Republic of)",
         "Germany",
         "France",
         "UK",
         "Japan",
         "Spain",
         "US",
-        "Taiwan"
+        "Taipei and environs"
       ];
 
       let SelectedCountries = result.filter(d =>
