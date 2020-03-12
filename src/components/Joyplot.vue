@@ -9,7 +9,6 @@ const d3 = Object.assign(
   require("d3-selection"),
   require("d3-scale"),
   require("d3-array"),
-  require("d3-collection"),
   require("d3-axis"),
   require("d3-time-format"),
   require("d3-shape"),
@@ -67,12 +66,9 @@ export default {
     });
 
     const ProblematicCountries = d3
-      .nest()
-      .key(d => d["Country/Region"])
-      .rollup(d => d.length)
-      .entries(SelectedCountries)
-      .filter(d => d.value > 1)
-      .map(d => d.key);
+      .groups(SelectedCountries, d => d["Country/Region"])
+      .filter(d => d[1].length > 1)
+      .map(d => d[0]);
 
     function AggregateCountry(country) {
       const CountryTotal = SelectedCountries.filter(

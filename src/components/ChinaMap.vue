@@ -8,8 +8,7 @@ const d3 = Object.assign(
   require("d3-fetch"),
   require("d3-selection"),
   require("d3-geo"),
-  require("d3-scale"),
-  require("d3-array")
+  require("d3-scale")
 );
 
 export default {

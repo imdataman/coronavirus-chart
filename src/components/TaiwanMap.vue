@@ -9,9 +9,7 @@ const d3 = Object.assign(
   require("d3-selection"),
   require("d3-geo"),
   require("d3-scale"),
-  require("d3-array"),
-  require("d3-collection"),
-  require("d3-queue")
+  require("d3-array")
 );
 
 export default {
@@ -30,10 +28,11 @@ export default {
       ];
 
       const CountyConfirmed = d3
-        .nest()
-        .key(d => d["縣市"])
-        .rollup(v => d3.sum(v, d => d["確定病例數"]))
-        .entries(TaiwanCases);
+        .groups(TaiwanCases, d => d["縣市"])
+        .map(d => ({
+          key: d[0],
+          value: d3.sum(d[1].map(j => +j["確定病例數"]))
+        }));
 
       TaiwanMap.features.forEach(d => {
         const re = /臺/gi;

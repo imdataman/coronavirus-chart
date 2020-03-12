@@ -9,7 +9,6 @@ const d3 = Object.assign(
   require("d3-geo"),
   require("d3-scale"),
   require("d3-array"),
-  require("d3-collection"),
   require("d3-axis")
 );
 
@@ -30,10 +29,11 @@ export default {
       );
 
       const CountryCases = d3
-        .nest()
-        .key(d => d["ChineseNameCountry"])
-        .rollup(v => d3.sum(v, d => d["Confirmed"]))
-        .entries(WorldData)
+        .groups(WorldData, d => d["ChineseNameCountry"])
+        .map(d => ({
+          key: d[0],
+          value: d3.sum(d[1].map(j => +j["Confirmed"]))
+        }))
         .sort((a, b) => b.value - a.value)
         .filter(d => d.value >= 10);
 
@@ -116,13 +116,14 @@ export default {
           .attr("transform", "translate(0 , -" + (barHeight / 2 - 7) + ")");
       }
 
-      const AreaCases = d3
-        .nest()
-        .key(d => d["area"])
-        .rollup(v => d3.sum(v, d => d["value"]))
-        .entries(CountryCases)
-        .sort((a, b) => b.value - a.value);
-      const uniqueItems = AreaCases.map(d => d.key);
+      const uniqueItems = d3
+        .groups(CountryCases, d => d["area"])
+        .map(d => ({
+          key: d[0],
+          value: d3.sum(d[1].map(j => +j["value"]))
+        }))
+        .sort((a, b) => b.value - a.value)
+        .map(d => d.key);
 
       uniqueItems.forEach(d =>
         drawTable(
