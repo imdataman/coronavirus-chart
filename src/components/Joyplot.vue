@@ -34,7 +34,7 @@ export default {
       { en: "United Kingdom", zh: "英國" }
     ];
 
-    const MaxX = 15000;
+    const MaxY = 15000;
 
     function addvector(a, b) {
       return a.map((e, i) => e + b[i]);
@@ -93,7 +93,7 @@ export default {
     ProblematicCountries.forEach(AggregateCountry);
 
     SelectedCountries.forEach(d => {
-      d.Confirmed = d.Confirmed.map(d => d / MaxX);
+      d.Confirmed = d.Confirmed.map(d => d / MaxY);
       d.order = CountryList.findIndex(j => j === d["Country/Region"]);
     });
 
