@@ -32,17 +32,11 @@ export default {
         .groups(WorldData, d => d["ChineseNameCountry"])
         .map(d => ({
           key: d[0],
-          value: d3.sum(d[1].map(j => +j["Confirmed"]))
+          value: d3.sum(d[1].map(j => +j["Confirmed"])),
+          area: WorldData.filter(j => j.ChineseNameCountry === d[0])[0].area
         }))
         .sort((a, b) => b.value - a.value)
         .filter(d => d.value >= 10);
-
-      CountryCases.forEach(
-        d =>
-          (d.area = WorldData.filter(
-            j => j.ChineseNameCountry === d.key
-          )[0].area)
-      );
 
       const width = document.getElementById("world").offsetWidth;
       const margin = { top: 60, right: 60, bottom: 30, left: 110 };

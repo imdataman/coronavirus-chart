@@ -34,6 +34,8 @@ export default {
       { en: "United Kingdom", zh: "英國" }
     ];
 
+    const MaxX = 15000;
+
     function addvector(a, b) {
       return a.map((e, i) => e + b[i]);
     }
@@ -52,18 +54,17 @@ export default {
       "Taiwan*"
     ];
 
-    let SelectedCountries = result.filter(d =>
-      CountryList.includes(d["Country/Region"])
-    );
-
-    SelectedCountries.forEach(d => {
-      d.Confirmed = Object.entries(d)
-        .map(j => +j[1])
-        .slice(4)
-        .map((d, i, arr) =>
-          i > 0 ? (arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0) : d
-        );
-    });
+    let SelectedCountries = result
+      .filter(d => CountryList.includes(d["Country/Region"]))
+      .map(d => ({
+        ...d,
+        Confirmed: Object.entries(d)
+          .map(j => +j[1])
+          .slice(4)
+          .map((d, i, arr) =>
+            i > 0 ? (arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0) : d
+          )
+      }));
 
     const ProblematicCountries = d3
       .groups(SelectedCountries, d => d["Country/Region"])
@@ -92,7 +93,6 @@ export default {
     ProblematicCountries.forEach(AggregateCountry);
 
     SelectedCountries.forEach(d => {
-      const MaxX = 15000;
       d.Confirmed = d.Confirmed.map(d => d / MaxX);
       d.order = CountryList.findIndex(j => j === d["Country/Region"]);
     });
