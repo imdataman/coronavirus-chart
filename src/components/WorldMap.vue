@@ -6,7 +6,6 @@
 const d3 = Object.assign(
   {},
   require("d3-selection"),
-  require("d3-geo"),
   require("d3-scale"),
   require("d3-array"),
   require("d3-axis")
@@ -110,20 +109,8 @@ export default {
           .attr("transform", "translate(0 , -" + (barHeight / 2 - 7) + ")");
       }
 
-      const uniqueItems = d3
-        .groups(CountryCases, d => d["area"])
-        .map(d => ({
-          key: d[0],
-          value: d3.sum(d[1].map(j => +j["value"]))
-        }))
-        .sort((a, b) => b.value - a.value)
-        .map(d => d.key);
-
-      uniqueItems.forEach(d =>
-        drawTable(
-          CountryCases.filter(j => j.area === d),
-          this.$el
-        )
+      d3.groups(CountryCases, d => d["area"]).forEach(d =>
+        drawTable(d[1], this.$el)
       );
 
       d3.selectAll(".tableText")
