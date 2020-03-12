@@ -72,7 +72,7 @@ import WorldMap from "./components/WorldMap.vue";
 import TaiwanMap from "./components/TaiwanMap.vue";
 import Joyplot from "./components/Joyplot.vue";
 
-const d3 = Object.assign({}, require("d3-request"));
+const d3 = Object.assign({}, require("d3-fetch"));
 
 export default {
   name: "App",
@@ -90,7 +90,7 @@ export default {
     };
   },
   mounted() {
-    d3.json("./data/JHU-latest.json", d => {
+    d3.json("./data/JHU-latest.json").then(d => {
       this.csv = d;
     });
 

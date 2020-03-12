@@ -5,7 +5,7 @@
 <script>
 const d3 = Object.assign(
   {},
-  require("d3-request"),
+  require("d3-fetch"),
   require("d3-selection"),
   require("d3-geo"),
   require("d3-scale"),
@@ -17,12 +17,10 @@ const d3 = Object.assign(
 export default {
   name: "TaiwanMap",
   mounted() {
-    d3.queue(2)
-      .defer(d3.json, "./data/taiwan-cases.json")
-      .defer(d3.json, "./data/taiwan.json")
-      .awaitAll(ready);
-    function ready(error, results) {
-      if (error) throw error;
+    Promise.all([
+      d3.json("./data/taiwan-cases.json"),
+      d3.json("./data/taiwan.json")
+    ]).then(results => {
       const TaiwanCases = results[0];
       const TaiwanMap = results[1];
 
@@ -148,7 +146,7 @@ export default {
           return `translate(${coord})`;
         })
         .text(d => d.properties.CONFIRMED);
-    }
+    });
   }
 };
 </script>

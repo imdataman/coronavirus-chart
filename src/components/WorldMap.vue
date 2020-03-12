@@ -5,7 +5,6 @@
 <script>
 const d3 = Object.assign(
   {},
-  require("d3-request"),
   require("d3-selection"),
   require("d3-geo"),
   require("d3-scale"),
@@ -27,8 +26,7 @@ export default {
   watch: {
     csv: function() {
       const WorldData = this.csv.filter(
-        d =>
-          d["Country/Region"] !== "" && d["Country/Region"] !== "Mainland China"
+        d => d["Country/Region"] !== "" && d["Country/Region"] !== "China"
       );
 
       const CountryCases = d3

@@ -5,7 +5,7 @@
 <script>
 const d3 = Object.assign(
   {},
-  require("d3-request"),
+  require("d3-fetch"),
   require("d3-selection"),
   require("d3-geo"),
   require("d3-scale"),
@@ -23,7 +23,7 @@ export default {
     }
   },
   watch: {
-    csv: function() {
+    csv: async function() {
       const FixLocation = [
         {
           name: "Finland",
@@ -76,68 +76,63 @@ export default {
 
       const radius = d3.scaleSqrt([0, 10000], [0, 40]);
 
-      d3.json("./data/europe.json", d => {
-        svg
-          .append("g")
-          .append("path")
-          .classed("mapLayer", true)
-          .datum(d)
-          .attr("d", path);
+      const EuropeMap = await d3.json("./data/europe.json");
+      svg
+        .append("g")
+        .append("path")
+        .classed("mapLayer", true)
+        .datum(EuropeMap)
+        .attr("d", path);
 
-        svg
-          .append("g")
-          .selectAll("text")
-          .data(TopTen)
-          .join("text")
-          .classed("EuropeLabel", true)
-          .attr("transform", d => {
-            const nudge = radius(d.Confirmed);
-            const coord = projection([+d.Longitude, +d.Latitude]);
-            return (
-              "translate(" +
-              (coord[0] + nudge + 2) +
-              ", " +
-              (coord[1] + 7) +
-              ")"
-            );
-          })
-          .text(d => d["ChineseNameCountry"]);
+      svg
+        .append("g")
+        .selectAll("text")
+        .data(TopTen)
+        .join("text")
+        .classed("EuropeLabel", true)
+        .attr("transform", d => {
+          const nudge = radius(d.Confirmed);
+          const coord = projection([+d.Longitude, +d.Latitude]);
+          return (
+            "translate(" + (coord[0] + nudge + 2) + ", " + (coord[1] + 7) + ")"
+          );
+        })
+        .text(d => d["ChineseNameCountry"]);
 
-        svg
-          .append("g")
-          .selectAll("circle")
-          .data(EuropeData)
-          .join("circle")
-          .classed("CircleLayer", true)
-          .attr("r", d => radius(d.Confirmed))
-          .attr("transform", d => {
-            const coord = projection([+d.Longitude, +d.Latitude]);
-            return "translate(" + coord[0] + ", " + coord[1] + ")";
-          });
+      svg
+        .append("g")
+        .selectAll("circle")
+        .data(EuropeData)
+        .join("circle")
+        .classed("CircleLayer", true)
+        .attr("r", d => radius(d.Confirmed))
+        .attr("transform", d => {
+          const coord = projection([+d.Longitude, +d.Latitude]);
+          return "translate(" + coord[0] + ", " + coord[1] + ")";
+        });
 
-        svg
-          .append("g")
-          .selectAll("circle")
-          .data([100, 1000, 10000])
-          .join("circle")
-          .classed("CircleLegend", true)
-          .attr("r", d => radius(d))
-          .attr("transform", d => {
-            return "translate(" + 850 + ", " + (620 - radius(d)) + ")";
-          });
+      svg
+        .append("g")
+        .selectAll("circle")
+        .data([100, 1000, 10000])
+        .join("circle")
+        .classed("CircleLegend", true)
+        .attr("r", d => radius(d))
+        .attr("transform", d => {
+          return "translate(" + 850 + ", " + (620 - radius(d)) + ")";
+        });
 
-        svg
-          .append("g")
-          .selectAll("text")
-          .data([100, 1000, 10000])
-          .join("text")
-          .classed("CircleLegendText", true)
-          .attr("transform", d => {
-            const nudge = d === 100 ? -(radius(d) * 2 + 12) : radius(d) * 2 + 5;
-            return "translate(" + 850 + ", " + (620 - nudge) + ")";
-          })
-          .text(d => d);
-      });
+      svg
+        .append("g")
+        .selectAll("text")
+        .data([100, 1000, 10000])
+        .join("text")
+        .classed("CircleLegendText", true)
+        .attr("transform", d => {
+          const nudge = d === 100 ? -(radius(d) * 2 + 12) : radius(d) * 2 + 5;
+          return "translate(" + 850 + ", " + (620 - nudge) + ")";
+        })
+        .text(d => d);
     }
   }
 };
