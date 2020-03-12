@@ -35,7 +35,7 @@ export default {
           Longitude: 14.359394
         },
         {
-          name: "Russian Federation",
+          name: "Russia",
           Latitude: 55.684627,
           Longitude: 37.605155
         }
