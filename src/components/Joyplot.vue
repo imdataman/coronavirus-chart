@@ -126,7 +126,7 @@ export default {
     x.domain(d3.extent(dates));
     y.domain(SelectedCountries.map(d => d["Country/Region"]));
 
-    var YLine = d3
+    const YLine = d3
       .scaleLinear()
       .range([unitLength, 0])
       .domain([0, 1]);
