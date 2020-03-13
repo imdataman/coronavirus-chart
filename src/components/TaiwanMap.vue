@@ -22,10 +22,7 @@ export default {
       const TaiwanCases = results[0];
       const TaiwanMap = results[1];
 
-      const ModifyPosition = [
-        { name: "台北市", position: "top" },
-        { name: "桃園市", position: "top" }
-      ];
+      const ModifyPosition = [{ name: "台北市", position: "top" }];
 
       const CountyConfirmed = d3
         .groups(TaiwanCases, d => d["縣市"])
@@ -50,12 +47,12 @@ export default {
       const svg = d3
         .select("#taiwan")
         .append("svg")
-        .attr("viewBox", [0, 0, 950, 650]);
+        .attr("viewBox", [0, 0, 950, 1200]);
 
       const projection = d3
         .geoMercator()
-        .center([120.5, 24])
-        .scale(10000);
+        .center([120.7, 24.7])
+        .scale(18000);
 
       const path = d3.geoPath().projection(projection);
 
@@ -92,7 +89,7 @@ export default {
         .classed("CircleLegend", true)
         .attr("r", d => radius(d))
         .attr("transform", d => {
-          return "translate(" + 850 + ", " + (600 - radius(d)) + ")";
+          return "translate(" + 850 + ", " + (1000 - radius(d)) + ")";
         });
 
       svg
@@ -103,48 +100,35 @@ export default {
         .classed("CircleLegendText", true)
         .attr("transform", d => {
           const nudge = d === 1 ? -(radius(d) * 2 + 10) : radius(d) * 2 + 5;
-          return "translate(" + 850 + ", " + (600 - nudge) + ")";
+          return "translate(" + 850 + ", " + (1000 - nudge) + ")";
         })
         .text(d => d);
 
-      svg
-        .append("g")
-        .selectAll("text")
+      const mapLabel = svg
+        .selectAll(".taiwanLabel")
         .data(Infected)
-        .join("text")
+        .join("g")
         .classed("taiwanLabel", true)
+        .classed("taipeiLabel", d => d.properties.COUNTYNAME === "台北市")
         .attr("transform", d => {
-          const coord = path.centroid(d);
           const nudge = radius(d.properties.CONFIRMED);
+          const coord = path.centroid(d);
           if (
             ModifyPosition.map(j => j.name).includes(d.properties.COUNTYNAME)
           ) {
-            coord[0] = coord[0] - 20;
             coord[1] = coord[1] - nudge - 5;
           } else {
             coord[0] = coord[0] + nudge + 2;
-            coord[1] = coord[1] + 7;
+            coord[1] = coord[1] + 9;
           }
-          return `translate(${coord})`;
-        })
-        .text(d => {
-          const re = /[縣市]/gi;
-          const label = d.properties.COUNTYNAME.replace(re, "");
-          return label;
+          return `translate(${coord[0]}, ${coord[1]})`;
         });
 
-      svg
-        .append("g")
-        .selectAll("text")
-        .data(Infected)
-        .join("text")
-        .classed("taiwanLabelNumbers", true)
-        .attr("transform", d => {
-          const coord = path.centroid(d);
-          coord[1] = coord[1] + 1;
-          return `translate(${coord})`;
-        })
-        .text(d => d.properties.CONFIRMED);
+      mapLabel.append("text").text(d => {
+        const re = /[縣市]/gi;
+        const label = d.properties.COUNTYNAME.replace(re, "");
+        return `${label} ${d.properties.CONFIRMED}`;
+      });
     });
   }
 };
@@ -180,11 +164,10 @@ export default {
 .taiwanLabel {
   text-anchor: start;
   fill-opacity: 0.8;
-  font-size: 20px;
+  font-size: 24px;
 }
 
-.taiwanLabelNumbers {
+.taipeiLabel {
   text-anchor: middle;
-  dominant-baseline: middle;
 }
 </style>

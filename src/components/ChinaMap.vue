@@ -29,15 +29,39 @@ export default {
 
       const TopTen = ChinaData.slice(0, 10);
 
+      const FixLocation = [
+        {
+          name: "Xinjiang",
+          Latitude: 42.85083,
+          Longitude: 95.234485
+        },
+        {
+          name: "Tibet",
+          Latitude: 30.485535,
+          Longitude: 95.989658
+        }
+      ];
+
+      const FixLocationList = FixLocation.map(j => j.name);
+
+      ChinaData.forEach(d => {
+        d.Latitude = FixLocationList.includes(d["Province/State"])
+          ? FixLocation.filter(k => k.name === d["Province/State"])[0].Latitude
+          : d.Latitude;
+        d.Longitude = FixLocationList.includes(d["Province/State"])
+          ? FixLocation.filter(k => k.name === d["Province/State"])[0].Longitude
+          : d.Longitude;
+      });
+
       const svg = d3
         .select("#china")
         .append("svg")
-        .attr("viewBox", [0, 0, 950, 650]);
+        .attr("viewBox", [0, 0, 950, 1000]);
 
       const projection = d3
         .geoMercator()
-        .center([105, 42])
-        .scale(800);
+        .center([112, 42])
+        .scale(1500);
 
       const path = d3.geoPath().projection(projection);
 
@@ -51,25 +75,29 @@ export default {
         .datum(ChinaMap)
         .attr("d", path);
 
-      svg
-        .append("g")
-        .selectAll("text")
+      const mapLabel = svg
+        .selectAll(".ChinaLabel")
         .data(TopTen)
-        .join("text")
+        .join("g")
         .classed("ChinaLabel", true)
-        .classed("HubeiLabel", d => d["ChineseNameProvince"] === "湖北")
+        .classed(
+          "HubeiLabel",
+          d =>
+            d["ChineseNameProvince"] === "湖北" ||
+            d["ChineseNameProvince"] === "湖南"
+        )
         .attr("transform", d => {
           const nudge = radius(d.Confirmed);
           const coord = projection([+d.Longitude, +d.Latitude]);
-          return d["ChineseNameProvince"] === "湖北"
-            ? "translate(" + coord[0] + ", " + (coord[1] + 5) + ")"
-            : "translate(" +
-                (coord[0] + nudge + 2) +
-                ", " +
-                (coord[1] + 7) +
-                ")";
-        })
-        .text(d => d["ChineseNameProvince"]);
+          return d["ChineseNameProvince"] === "湖北" ||
+            d["ChineseNameProvince"] === "湖南"
+            ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
+            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 9})`;
+        });
+
+      mapLabel
+        .append("text")
+        .text(d => `${d["ChineseNameProvince"]} ${d["Confirmed"]}`);
 
       svg
         .append("g")
@@ -91,7 +119,7 @@ export default {
         .classed("CircleLegend", true)
         .attr("r", d => radius(d))
         .attr("transform", d => {
-          return "translate(" + 850 + ", " + (600 - radius(d)) + ")";
+          return "translate(" + 850 + ", " + (950 - radius(d)) + ")";
         });
 
       svg
@@ -102,7 +130,7 @@ export default {
         .classed("CircleLegendText", true)
         .attr("transform", d => {
           const nudge = d === 100 ? -(radius(d) * 2 + 12) : radius(d) * 2 + 5;
-          return "translate(" + 850 + ", " + (600 - nudge) + ")";
+          return "translate(" + 850 + ", " + (950 - nudge) + ")";
         })
         .text(d => d);
     }
@@ -140,7 +168,7 @@ export default {
 .ChinaLabel {
   text-anchor: start;
   fill-opacity: 0.8;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .HubeiLabel {
