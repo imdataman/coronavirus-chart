@@ -91,7 +91,7 @@ export default {
         .attr("transform", d => {
           const nudge = radius(d.Confirmed);
           const coord = projection([+d.Longitude, +d.Latitude]);
-          return `translate(${coord[0] + nudge + 2}, ${coord[1] + 9})`;
+          return `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
         });
 
       mapLabel

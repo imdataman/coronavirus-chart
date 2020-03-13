@@ -119,7 +119,7 @@ export default {
             coord[1] = coord[1] - nudge - 5;
           } else {
             coord[0] = coord[0] + nudge + 2;
-            coord[1] = coord[1] + 9;
+            coord[1] = coord[1] + 8;
           }
           return `translate(${coord[0]}, ${coord[1]})`;
         });

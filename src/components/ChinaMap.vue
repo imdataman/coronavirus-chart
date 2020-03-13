@@ -92,7 +92,7 @@ export default {
           return d["ChineseNameProvince"] === "湖北" ||
             d["ChineseNameProvince"] === "湖南"
             ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
-            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 9})`;
+            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
         });
 
       mapLabel
