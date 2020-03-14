@@ -24,14 +24,14 @@ export default {
       { en: "Iran", zh: "伊朗" },
       { en: "Korea, South", zh: "南韓" },
       { en: "Taiwan*", zh: "台灣" },
-      { en: "Italy", zh: "義大利" },
+      { en: "Italy", zh: "義大利", mar12: 15113 },
       { en: "US", zh: "美國" },
       { en: "China", zh: "中國大陸" },
-      { en: "France", zh: "法國" },
-      { en: "Germany", zh: "德國" },
+      { en: "France", zh: "法國", mar12: 2876 },
+      { en: "Germany", zh: "德國", mar12: 2369 },
       { en: "Japan", zh: "日本" },
-      { en: "Spain", zh: "西班牙" },
-      { en: "United Kingdom", zh: "英國" }
+      { en: "Spain", zh: "西班牙", mar12: 2950 },
+      { en: "United Kingdom", zh: "英國", mar12: 590 }
     ];
 
     const MaxY = 15000;
@@ -54,17 +54,36 @@ export default {
       "Taiwan*"
     ];
 
-    let SelectedCountries = result
-      .filter(d => CountryList.includes(d["Country/Region"]))
-      .map(d => ({
-        ...d,
-        Confirmed: Object.entries(d)
-          .map(j => +j[1])
-          .slice(4)
-          .map((d, i, arr) =>
-            i > 0 ? (arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0) : d
-          )
-      }));
+    console.log(result);
+
+    let SelectedCountries = result.filter(d =>
+      CountryList.includes(d["Country/Region"])
+    );
+
+    SelectedCountries.forEach(d => {
+      const correction = CountryDictionary.filter(
+        j => j.en === d["Country/Region"]
+      )[0].mar12;
+
+      if (["France", "United Kingdom"].includes(d["Country/Region"])) {
+        d["3/12/20"] =
+          correction && d["Province/State"] === d["Country/Region"]
+            ? correction
+            : d["3/12/20"];
+      } else {
+        d["3/12/20"] = correction ? correction : d["3/12/20"];
+      }
+    });
+
+    SelectedCountries = SelectedCountries.map(d => ({
+      ...d,
+      Confirmed: Object.entries(d)
+        .map(j => +j[1])
+        .slice(4)
+        .map((d, i, arr) =>
+          i > 0 ? (arr[i] - arr[i - 1] > 0 ? arr[i] - arr[i - 1] : 0) : d
+        )
+    }));
 
     const ProblematicCountries = d3
       .groups(SelectedCountries, d => d["Country/Region"])
