@@ -54,8 +54,6 @@ export default {
       "Taiwan*"
     ];
 
-    console.log(result);
-
     let SelectedCountries = result.filter(d =>
       CountryList.includes(d["Country/Region"])
     );
