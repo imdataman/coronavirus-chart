@@ -1,5 +1,8 @@
 <template>
-  <div id="world"></div>
+  <div>
+    <select id="selectArea"></select>
+    <div id="world"></div>
+  </div>
 </template>
 
 <script>
@@ -50,12 +53,12 @@ export default {
 
         d3.select(target)
           .append("svg")
-          .attr("id", areaName)
+          .attr("id", "barchart")
           .attr("height", tableHeight + margin.top)
           .attr("width", "100%");
 
         d3.select(target)
-          .select("#" + areaName)
+          .select("#barchart")
           .append("text")
           .attr("class", "tableTitle")
           .attr("x", 0)
@@ -64,7 +67,7 @@ export default {
 
         const svg2 = d3
           .select(target)
-          .select("#" + areaName)
+          .select("#barchart")
           .append("g")
           .attr(
             "transform",
@@ -109,9 +112,26 @@ export default {
           .attr("transform", "translate(0 , -" + (barHeight / 2 - 7) + ")");
       }
 
-      d3.groups(CountryCases, d => d["area"]).forEach(d =>
-        drawTable(d[1], this.$el)
-      );
+      const dataGroup = d3.groups(CountryCases, d => d["area"]);
+
+      const selectGadget = d3.select("#selectArea").on("change", () => {
+        const selectValue = d3.select("select").property("value");
+        d3.select("#barchart").remove();
+        dataGroup
+          .filter(d => d[0] === selectValue)
+          .forEach(d => drawTable(d[1], "#world"));
+      });
+
+      selectGadget
+        .selectAll("option")
+        .data(dataGroup.map(d => d[0]))
+        .join("option")
+        .attr("value", d => d)
+        .text(d => d);
+
+      dataGroup
+        .filter(d => d[0] === "歐洲")
+        .forEach(d => drawTable(d[1], "#world"));
 
       d3.selectAll(".tableText")
         .filter(function() {
