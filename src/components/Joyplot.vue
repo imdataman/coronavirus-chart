@@ -217,7 +217,7 @@ export default {
         d3
           .axisBottom(x)
           .ticks(d3.timeMonth)
-          .tickFormat(d3.timeFormat("%-m"))
+          .tickFormat(d3.timeFormat("%-m月"))
       )
       .call(g => g.select(".domain").remove())
       .selectAll("text")
