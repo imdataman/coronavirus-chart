@@ -1,5 +1,5 @@
 <template>
-  <div id="map"></div>
+  <div id="risk"></div>
 </template>
 
 <script>
@@ -12,141 +12,157 @@ const d3 = Object.assign(
   require("d3-array")
 );
 import * as topojson from "topojson-client";
-import lineSliceAlong from "@turf/line-slice-along";
 import greatCircle from "@turf/great-circle";
 import { point } from "@turf/helpers";
 
 export default {
-  name: "Map",
+  name: "RiskMap",
   async mounted() {
     const result = await d3.json("./data/ne_50m_admin_0_countries_lakes.json");
+    const riskData = await d3.csv("./data/risk-data.csv");
     const world = topojson.feature(
       result,
       result.objects["ne_50m_admin_0_countries_lakes"]
     );
 
-    const svg = d3
-      .select("#map")
-      .append("svg")
-      .attr("viewBox", [0, 0, 950, 750]);
+    const locations = riskData.map(d => ({
+      ...d,
+      geometry_ori: point([d.ori_long, d.ori_lat]),
+      geometry_tar: point([d.tar_long, d.tar_lat])
+    }));
 
-    svg.append("rect").attr("id", "sea");
+    locations.forEach(d => (d.value = +d.value));
 
-    const italy = {
-      geometry: point([12.5674, 41.8719]),
-      name: "義大利",
-      value: 0
-    };
-    const greece = {
-      geometry: point([21.8243, 39.0742]),
-      name: "希臘",
-      value: 76
-    };
-    const france = {
-      geometry: point([2.2137, 46.2276]),
-      name: "法國",
-      value: 64
-    };
-    const spain = {
-      geometry: point([-3.7492, 40.4637]),
-      name: "西班牙",
-      value: 44
-    };
-    const germany = {
-      geometry: point([10.4515, 51.1657]),
-      name: "德國",
-      value: 35
-    };
-    const romania = {
-      geometry: point([24.9668, 45.9432]),
-      name: "羅馬尼亞",
-      value: 23
-    };
+    const locationNames = [
+      ...new Set([
+        ...locations.map(d => d.tar_en),
+        ...locations.map(d => d.ori_en)
+      ])
+    ];
 
     const dotGapScale = d3
       .scaleLinear()
-      .range([8, 20])
-      .domain(
-        d3
-          .extent([greece, france, spain, germany, romania], d => d.value)
-          .reverse()
-      );
+      .range([8, 40])
+      .domain([200, 20])
+      .clamp(true);
 
     const dotColorScale = d3
       .scaleLinear()
       .range(["#fdcc8a", "#d7301f"])
-      .domain(
-        d3.extent([greece, france, spain, germany, romania], d => d.value)
-      );
+      .domain(d3.extent(locations, d => d.value))
+      .clamp(true);
 
-    const points = [italy, greece, france, spain, germany, romania];
+    const greatCircles = locations.map(d => ({
+      ...d,
+      path: greatCircle(d.geometry_ori, d.geometry_tar)
+    }));
 
-    const greatCircles = [
-      lineSliceAlong(greatCircle(italy.geometry, greece.geometry), 100, 10000),
-      lineSliceAlong(greatCircle(italy.geometry, france.geometry), 100, 10000),
-      lineSliceAlong(greatCircle(italy.geometry, spain.geometry), 120, 10000),
-      lineSliceAlong(greatCircle(italy.geometry, germany.geometry), 50, 10000),
-      lineSliceAlong(greatCircle(italy.geometry, romania.geometry), 100, 10000)
-    ];
-    const projection = d3
-      .geoConicEquidistant()
-      .rotate([-19.0, 0.0])
-      .center([-10.0, 48.5])
-      .parallels([-0.0, 55.0])
-      .scale(2000)
-      .precision(0.1);
+    function renderMap(geoInfo) {
+      const projection = d3
+        .geoConicEquidistant()
+        .rotate(geoInfo.rotate)
+        .center(geoInfo.center)
+        .parallels(geoInfo.parallels)
+        .scale(geoInfo.scale)
+        .precision(0.1);
 
-    const path = d3.geoPath().projection(projection);
+      const path = d3.geoPath().projection(projection);
 
-    svg
-      .append("g")
-      .selectAll("path")
-      .data(world.features)
-      .join("path")
-      .attr("class", "polygon")
-      .classed("affected", d =>
-        ["Italy", "Germany", "Greece", "France", "Romania", "Spain"].includes(
-          d.properties.NAME
+      const svg = d3
+        .select("#risk")
+        .append("svg")
+        .attr("id", `riskMap${geoInfo.id}`)
+        .attr("viewBox", [0, 0, 950, 750]);
+
+      svg.append("rect").attr("id", "sea");
+
+      svg
+        .append("g")
+        .selectAll("path")
+        .data(world.features)
+        .join("path")
+        .attr("class", "polygon")
+        .classed("affected", d => locationNames.includes(d.properties.NAME))
+        .attr("d", path);
+
+      svg.selectAll(".affected").raise();
+
+      svg
+        .selectAll(".line")
+        .data(greatCircles)
+        .join("path")
+        .attr("class", (d, i) => `line${i + 1}`)
+        .classed("line", true)
+        .attr("d", d => `${path(d.path)} h0`)
+        .style("stroke-dasharray", d => `0.25 ${dotGapScale(d.value)}`)
+        .style("stroke", d => `${dotColorScale(d.value)}`);
+
+      svg
+        .selectAll(".targetLabel")
+        .data(greatCircles)
+        .join("text")
+        .attr("class", d => `${d.tar_en} locationLabel`)
+        .classed("targetLabel", true)
+        .attr("transform", d =>
+          d.target === "安哥拉" && geoInfo.id === 0
+            ? "translate(325, 740)"
+            : `translate(${projection([d.tar_long, d.tar_lat])[0]}, ${
+                projection([d.tar_long, d.tar_lat])[1]
+              })`
         )
-      )
-      .attr("d", path);
+        .text(d => d.target);
 
-    svg.selectAll(".affected").raise();
+      svg
+        .selectAll(".originLabel")
+        .data(greatCircles)
+        .join("text")
+        .attr("class", d => `${d.ori_en} locationLabel`)
+        .classed("originLabel", true)
+        .attr(
+          "transform",
+          d =>
+            `translate(${projection([d.ori_long, d.ori_lat])[0]}, ${
+              projection([d.ori_long, d.ori_lat])[1]
+            })`
+        )
+        .text(d => d.origin);
 
-    svg
-      .append("g")
-      .selectAll(".line")
-      .data(greatCircles)
-      .join("path")
-      .attr("class", (d, i) => `line${i + 1}`)
-      .classed("line", true)
-      .attr("d", d => `${path(d)} h0`)
-      .style(
-        "stroke-dasharray",
-        (d, i) => `2 ${dotGapScale(points[i + 1].value)}`
-      )
-      .style("stroke", (d, i) => `${dotColorScale(points[i + 1].value)}`);
+      locationNames.forEach(d =>
+        d3.select(`#riskMap${geoInfo.id} .${d}`).attr("class", "displayedLabel")
+      );
+    }
 
-    svg
-      .append("g")
-      .selectAll("text")
-      .data(points)
-      .join("text")
-      .attr("class", "locationLabel")
-      .attr(
-        "transform",
-        d =>
-          `translate(${projection(d.geometry.geometry.coordinates)[0]}, ${
-            projection(d.geometry.geometry.coordinates)[1]
-          })`
-      )
-      .text(d => `${d.name} ${d.value || ""}`);
+    const mapLayout = [
+      {
+        id: 0,
+        rotate: [-22.0, 0.0],
+        center: [-10.0, 48.5],
+        parallels: [-0.0, 55.0],
+        scale: 1500
+      },
+      {
+        id: 1,
+        rotate: [-63.0, 0.0],
+        center: [-10.0, 37],
+        parallels: [30, 70],
+        scale: 1800
+      },
+      {
+        id: 2,
+        rotate: [-132.0, 0.0],
+        center: [-10.0, 32],
+        parallels: [100, 140],
+        scale: 1400
+      }
+    ];
+
+    mapLayout.forEach(d => renderMap(d));
   }
 };
 </script>
 
 <style>
-#map {
+#risk {
   max-width: 950px;
 }
 
@@ -168,8 +184,8 @@ export default {
 }
 
 .line {
-  /* stroke: black; */
-  stroke-width: 10px;
+  stroke-width: 6px;
+  stroke-linecap: round;
   fill: none;
   animation: dash 30s linear infinite;
 }
@@ -180,15 +196,15 @@ export default {
   }
 }
 
-.location {
-  stroke: black;
-  fill: white;
-  stroke-width: 2px;
-}
 .locationLabel {
+  fill-opacity: 0;
+}
+
+.displayedLabel {
+  fill-opacity: 0.8;
   text-anchor: middle;
   alignment-baseline: middle;
-  font-size: 1.25rem;
-  fill-opacity: 0.8;
+  font-size: 24px;
+  z-index: 2;
 }
 </style>
