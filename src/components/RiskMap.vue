@@ -72,6 +72,13 @@ export default {
           .reverse()
       );
 
+    const dotColorScale = d3
+      .scaleLinear()
+      .range(["#fdcc8a", "#d7301f"])
+      .domain(
+        d3.extent([greece, france, spain, germany, romania], d => d.value)
+      );
+
     const points = [italy, greece, france, spain, germany, romania];
 
     const greatCircles = [
@@ -116,8 +123,9 @@ export default {
       .attr("d", d => `${path(d)} h0`)
       .style(
         "stroke-dasharray",
-        (d, i) => `1 ${dotGapScale(points[i + 1].value)}`
-      );
+        (d, i) => `2 ${dotGapScale(points[i + 1].value)}`
+      )
+      .style("stroke", (d, i) => `${dotColorScale(points[i + 1].value)}`);
 
     svg
       .append("g")
@@ -160,7 +168,7 @@ export default {
 }
 
 .line {
-  stroke: black;
+  /* stroke: black; */
   stroke-width: 10px;
   fill: none;
   animation: dash 30s linear infinite;
