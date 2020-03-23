@@ -34,7 +34,7 @@ export default {
       { en: "United Kingdom", zh: "英國", mar12: 590 }
     ];
 
-    const MaxY = 15000;
+    const MaxY = 20000;
 
     function addvector(a, b) {
       return a.map((e, i) => e + b[i]);
@@ -42,7 +42,7 @@ export default {
 
     const CountryList = [
       "China",
-      "Korea, South",
+      "US",
       "Italy",
       "Iran",
       "Germany",
@@ -50,7 +50,7 @@ export default {
       "United Kingdom",
       "Japan",
       "Spain",
-      "US",
+      "Korea, South",
       "Taiwan*"
     ];
 
@@ -222,6 +222,26 @@ export default {
       .call(g => g.select(".domain").remove())
       .selectAll("text")
       .style("text-anchor", "middle");
+
+    joyplot
+      .append("text")
+      .attr("id", "topNumber")
+      .attr("transform", () => {
+        return (
+          "translate(" +
+          margin.left +
+          "," +
+          (y("China") * ProximityParameter - unitLength + lineHeight) +
+          ")"
+        );
+      })
+      .attr("x", () => {
+        return x(dates[22]);
+      })
+      .attr("y", () => {
+        return YLine((15136 * 0.77) / MaxY);
+      })
+      .text("15136");
   }
 };
 </script>
@@ -246,5 +266,9 @@ export default {
 
 .lineAxis line {
   stroke: none;
+}
+
+#topNumber {
+  text-anchor: middle;
 }
 </style>

@@ -83,21 +83,6 @@ export default {
         .datum(EuropeMap)
         .attr("d", path);
 
-      const mapLabel = svg
-        .selectAll(".EuropeLabel")
-        .data(TopTen)
-        .join("g")
-        .classed("EuropeLabel", true)
-        .attr("transform", d => {
-          const nudge = radius(d.Confirmed);
-          const coord = projection([+d.Longitude, +d.Latitude]);
-          return `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
-        });
-
-      mapLabel
-        .append("text")
-        .text(d => `${d["ChineseNameCountry"]} ${d["Confirmed"]}`);
-
       svg
         .append("g")
         .selectAll("circle")
@@ -132,6 +117,26 @@ export default {
           return "translate(" + 850 + ", " + (770 - nudge) + ")";
         })
         .text(d => d);
+
+      const mapLabel = svg
+        .selectAll(".EuropeLabel")
+        .data(TopTen)
+        .join("g")
+        .classed("EuropeLabel", true)
+        .classed("SpecialLabel", d =>
+          ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
+        )
+        .attr("transform", d => {
+          const nudge = radius(d.Confirmed);
+          const coord = projection([+d.Longitude, +d.Latitude]);
+          return ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
+            ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
+            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
+        });
+
+      mapLabel
+        .append("text")
+        .text(d => `${d["ChineseNameCountry"]} ${d["Confirmed"]}`);
     }
   }
 };
@@ -168,5 +173,9 @@ export default {
   text-anchor: start;
   fill-opacity: 0.8;
   font-size: 24px;
+}
+
+.SpecialLabel {
+  text-anchor: middle;
 }
 </style>

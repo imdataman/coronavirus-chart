@@ -75,30 +75,6 @@ export default {
         .datum(ChinaMap)
         .attr("d", path);
 
-      const mapLabel = svg
-        .selectAll(".ChinaLabel")
-        .data(TopTen)
-        .join("g")
-        .classed("ChinaLabel", true)
-        .classed(
-          "HubeiLabel",
-          d =>
-            d["ChineseNameProvince"] === "湖北" ||
-            d["ChineseNameProvince"] === "湖南"
-        )
-        .attr("transform", d => {
-          const nudge = radius(d.Confirmed);
-          const coord = projection([+d.Longitude, +d.Latitude]);
-          return d["ChineseNameProvince"] === "湖北" ||
-            d["ChineseNameProvince"] === "湖南"
-            ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
-            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
-        });
-
-      mapLabel
-        .append("text")
-        .text(d => `${d["ChineseNameProvince"]} ${d["Confirmed"]}`);
-
       svg
         .append("g")
         .selectAll("circle")
@@ -133,6 +109,30 @@ export default {
           return "translate(" + 850 + ", " + (950 - nudge) + ")";
         })
         .text(d => d);
+
+      const mapLabel = svg
+        .selectAll(".ChinaLabel")
+        .data(TopTen)
+        .join("g")
+        .classed("ChinaLabel", true)
+        .classed(
+          "HubeiLabel",
+          d =>
+            d["ChineseNameProvince"] === "湖北" ||
+            d["ChineseNameProvince"] === "湖南"
+        )
+        .attr("transform", d => {
+          const nudge = radius(d.Confirmed);
+          const coord = projection([+d.Longitude, +d.Latitude]);
+          return d["ChineseNameProvince"] === "湖北" ||
+            d["ChineseNameProvince"] === "湖南"
+            ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
+            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
+        });
+
+      mapLabel
+        .append("text")
+        .text(d => `${d["ChineseNameProvince"]} ${d["Confirmed"]}`);
     }
   }
 };
