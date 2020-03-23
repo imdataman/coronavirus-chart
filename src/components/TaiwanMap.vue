@@ -56,10 +56,7 @@ export default {
 
       const path = d3.geoPath().projection(projection);
 
-      const radius = d3.scaleSqrt(
-        [0, d3.max(CountyConfirmed, d => d.value)],
-        [0, 20]
-      );
+      const radius = d3.scaleSqrt([0, 50], [0, 20]);
 
       svg
         .append("g")
@@ -84,7 +81,7 @@ export default {
       svg
         .append("g")
         .selectAll("circle")
-        .data([1, 5, 20])
+        .data([10, 50, 100])
         .join("circle")
         .classed("CircleLegend", true)
         .attr("r", d => radius(d))
@@ -95,12 +92,12 @@ export default {
       svg
         .append("g")
         .selectAll("text")
-        .data([1, 5, 20])
+        .data([10, 50, 100])
         .join("text")
         .classed("CircleLegendText", true)
         .attr("transform", d => {
           const nudge = d === 1 ? -(radius(d) * 2 + 10) : radius(d) * 2 + 5;
-          return "translate(" + 850 + ", " + (1000 - nudge) + ")";
+          return "translate(" + 850 + ", " + (1000 - nudge + 3) + ")";
         })
         .text(d => d);
 
