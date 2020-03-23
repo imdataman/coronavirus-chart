@@ -11,6 +11,8 @@ const d3 = Object.assign(
   require("d3-scale")
 );
 
+import * as topojson from "topojson-client";
+
 export default {
   name: "EuropeMap",
   props: {
@@ -75,7 +77,13 @@ export default {
 
       const radius = d3.scaleSqrt([0, 10000], [0, 40]);
 
-      const EuropeMap = await d3.json("./data/europe.json");
+      let EuropeMap = await d3.json(
+        "./data/ne_50m_admin_0_countries_lakes.json"
+      );
+      EuropeMap = topojson.feature(
+        EuropeMap,
+        EuropeMap.objects["ne_50m_admin_0_countries_lakes"]
+      );
       svg
         .append("g")
         .append("path")

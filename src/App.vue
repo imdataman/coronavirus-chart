@@ -10,6 +10,7 @@
       <h2>
         隨著新冠肺炎疫情爆發，相關資訊越來越雜亂，《天下》整理國內外疫情現況、各國病例數趨勢以及台灣旅遊警示國家，讓你六個圖表一次掌握疫情最新資訊。
       </h2>
+      <RiskMap />
       <h3>世界各國確診案例數飆升，中東與歐洲確診案例激增</h3>
       <p>
         全世界總感染人數已超過9萬人，全球已超過60個國家與地區淪陷，除了東亞疫情逐漸嚴峻外，歐洲與中東各自出現疫情爆發的狀況。
@@ -71,6 +72,7 @@ import EuropeMap from "./components/EuropeMap.vue";
 import WorldMap from "./components/WorldMap.vue";
 import TaiwanMap from "./components/TaiwanMap.vue";
 import Joyplot from "./components/Joyplot.vue";
+import RiskMap from "./components/RiskMap.vue";
 
 const d3 = Object.assign({}, require("d3-fetch"));
 
@@ -81,7 +83,8 @@ export default {
     EuropeMap,
     WorldMap,
     TaiwanMap,
-    Joyplot
+    Joyplot,
+    RiskMap
   },
   data() {
     return {

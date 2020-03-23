@@ -9,6 +9,9 @@
     "update": "node ./src/scripts/updateData.js"
   },
   "dependencies": {
+    "@turf/great-circle": "^5.1.5",
+    "@turf/helpers": "^6.1.4",
+    "@turf/line-slice-along": "^5.1.5",
     "core-js": "^3.6.4",
     "d3-array": "^2.4.0",
     "d3-axis": "^1.0.12",
@@ -18,6 +21,7 @@
     "d3-selection": "^1.4.1",
     "d3-shape": "^1.3.7",
     "d3-time": "^1.1.0",
+    "topojson-client": "^3.1.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
