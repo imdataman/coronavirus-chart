@@ -88,6 +88,7 @@ export default {
       svg.selectAll(".affected").raise();
 
       svg
+        .append("g")
         .selectAll(".line")
         .data(greatCircles)
         .join("path")
@@ -98,10 +99,11 @@ export default {
         .style("stroke", d => `${dotColorScale(d.value)}`);
 
       svg
+        .append("g")
         .selectAll(".targetLabel")
         .data(greatCircles)
         .join("text")
-        .attr("class", d => `${d.tar_en} locationLabel`)
+        .attr("class", d => `${d.tar_en.replace(/\s/g, "")} locationLabel`)
         .classed("targetLabel", true)
         .attr("transform", d =>
           d.target === "安哥拉" && geoInfo.id === 0
@@ -113,10 +115,11 @@ export default {
         .text(d => d.target);
 
       svg
+        .append("g")
         .selectAll(".originLabel")
         .data(greatCircles)
         .join("text")
-        .attr("class", d => `${d.ori_en} locationLabel`)
+        .attr("class", d => `${d.ori_en.replace(/\s/g, "")} locationLabel`)
         .classed("originLabel", true)
         .attr(
           "transform",
@@ -128,7 +131,9 @@ export default {
         .text(d => d.origin);
 
       locationNames.forEach(d =>
-        d3.select(`#riskMap${geoInfo.id} .${d}`).attr("class", "displayedLabel")
+        d3
+          .select(`#riskMap${geoInfo.id} .${d.replace(/\s/g, "")}`)
+          .attr("class", "displayedLabel")
       );
     }
 
