@@ -14,7 +14,7 @@ function requestAsync(url) {
 
 const urls = [
   "https://script.google.com/macros/s/AKfycbzlwh5YaMCP6JQcCO_hzZKQSFTJQT65UvBp5AHDojAD-AjhSJ3D/exec",
-  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv",
+  "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
   "https://od.cdc.gov.tw/eic/Age_County_Gender_19Cov.json"
 ];
 

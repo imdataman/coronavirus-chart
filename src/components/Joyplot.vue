@@ -131,7 +131,7 @@ export default {
     const unitLength = lineHeight * 6;
     const chartHeight = SelectedCountries.length * lineHeight;
 
-    const ProximityParameter = 0.4;
+    const ProximityParameter = 0.8;
 
     const y = d3
       .scaleBand()
