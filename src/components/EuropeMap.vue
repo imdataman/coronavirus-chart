@@ -23,6 +23,11 @@ export default {
       }
     }
   },
+  computed: {
+    yScale() {
+      return d3.scaleSqrt([0, 100000], [0, 200]);
+    }
+  },
   watch: {
     csv: async function() {
       const FixLocation = [
@@ -91,17 +96,35 @@ export default {
         .datum(EuropeMap)
         .attr("d", path);
 
+      // svg
+      //   .append("g")
+      //   .selectAll("circle")
+      //   .data(EuropeData)
+      //   .join("circle")
+      //   .classed("CircleLayer", true)
+      //   .attr("r", d => radius(d.Confirmed))
+      //   .attr("transform", d => {
+      //     const coord = projection([+d.Longitude, +d.Latitude]);
+      //     return "translate(" + coord[0] + ", " + coord[1] + ")";
+      //   });
+
+      console.log(EuropeData);
+
       svg
         .append("g")
-        .selectAll("circle")
+        .selectAll("polyline")
         .data(EuropeData)
-        .join("circle")
-        .classed("CircleLayer", true)
-        .attr("r", d => radius(d.Confirmed))
-        .attr("transform", d => {
+        .join("polyline")
+        .attr("id", d => d.id)
+        .attr("points", d => {
           const coord = projection([+d.Longitude, +d.Latitude]);
-          return "translate(" + coord[0] + ", " + coord[1] + ")";
-        });
+          const h = this.yScale(d.Confirmed);
+          const x = coord[0];
+          const y = coord[1];
+          return `${x - 4},${y} ${x},${y - h} ${x + 4},${y}`;
+        })
+        .attr("stroke", "#cc0000")
+        .attr("fill", "url(#gradient)");
 
       svg
         .append("g")
@@ -126,25 +149,55 @@ export default {
         })
         .text(d => d);
 
+      // const mapLabel = svg
+      //   .selectAll(".EuropeLabel")
+      //   .data(TopTen)
+      //   .join("g")
+      //   .classed("EuropeLabel", true)
+      //   .classed("SpecialLabel", d =>
+      //     ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
+      //   )
+      //   .attr("transform", d => {
+      //     const nudge = radius(d.Confirmed);
+      //     const coord = projection([+d.Longitude, +d.Latitude]);
+      //     return ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
+      //       ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
+      //       : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
+      //   });
+
       const mapLabel = svg
         .selectAll(".EuropeLabel")
         .data(TopTen)
         .join("g")
         .classed("EuropeLabel", true)
         .classed("SpecialLabel", d =>
-          ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
+          ["葡萄牙"].includes(d["ChineseNameCountry"])
         )
         .attr("transform", d => {
-          const nudge = radius(d.Confirmed);
           const coord = projection([+d.Longitude, +d.Latitude]);
-          return ["法國", "荷蘭", "瑞士"].includes(d["ChineseNameCountry"])
-            ? "translate(" + coord[0] + ", " + (coord[1] - nudge - 5) + ")"
-            : `translate(${coord[0] + nudge + 2}, ${coord[1] + 8})`;
+          return `translate(${coord[0]}, ${coord[1] -
+            this.yScale(d.Confirmed) -
+            5})`;
         });
 
       mapLabel
         .append("text")
         .text(d => `${d["ChineseNameCountry"]} ${d["Confirmed"]}`);
+
+      const colors = d3.scaleOrdinal([100, 0], ["#f3f3f3", "#cc0000"]);
+
+      svg
+        .append("linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%")
+        .selectAll("stop")
+        .data([0, 100])
+        .join("stop")
+        .attr("offset", d => `${d}%`)
+        .attr("stop-color", d => colors(d));
     }
   }
 };
@@ -178,12 +231,12 @@ export default {
 }
 
 .EuropeLabel {
-  text-anchor: start;
+  text-anchor: middle;
   fill-opacity: 0.8;
   font-size: 24px;
 }
 
 .SpecialLabel {
-  text-anchor: middle;
+  text-anchor: start;
 }
 </style>
